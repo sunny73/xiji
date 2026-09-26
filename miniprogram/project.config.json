@@ -1,0 +1,23 @@
+{
+  "description": "分红管家小程序项目配置",
+  "appid": "touristappid",
+  "projectname": "dividend-manager",
+  "compileType": "miniprogram",
+  "libVersion": "3.5.5",
+  "miniprogramRoot": "./",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "showShadowRootInWxmlPanel": true,
+    "compileHotReLoad": true,
+    "useCompilerPlugins": false
+  },
+  "condition": {
+    "miniprogram": {
+      "list": []
+    }
+  }
+}

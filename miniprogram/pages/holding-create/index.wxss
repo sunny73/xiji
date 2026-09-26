@@ -1,0 +1,49 @@
+/* 新增持仓 */
+
+.form-picker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--c-text);
+}
+
+.arrow {
+  margin-left: 12rpx;
+  color: var(--c-text-3);
+  font-size: 32rpx;
+}
+
+.hint-row {
+  justify-content: flex-start;
+  min-height: 72rpx;
+}
+
+.hint {
+  font-size: 26rpx;
+  color: var(--c-text-3);
+}
+
+.hint--ok {
+  color: var(--c-primary);
+}
+
+.hint--new {
+  color: var(--c-gold);
+}
+
+.hint-sub {
+  margin-left: 16rpx;
+  font-size: 22rpx;
+  color: var(--c-text-3);
+}
+
+.tip {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+  line-height: 1.6;
+  padding: 0 12rpx 32rpx;
+}
+
+.btn {
+  margin: 0 4rpx;
+}

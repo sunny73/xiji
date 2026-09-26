@@ -1,0 +1,140 @@
+/* 分红列表 */
+
+.error-card {
+  background: var(--c-danger-soft);
+  border-radius: var(--r-card);
+  padding: 28rpx 32rpx;
+  margin-bottom: var(--gap);
+}
+.error-title { font-size: 28rpx; font-weight: 600; color: var(--c-danger); }
+.error-msg { font-size: 24rpx; color: var(--c-danger); margin-top: 8rpx; opacity: 0.85; }
+.error-retry { font-size: 24rpx; color: var(--c-danger); margin-top: 12rpx; text-decoration: underline; }
+
+/* --- 合计 ---------------------------------------------------------------- */
+
+.summary {
+  display: flex;
+  align-items: center;
+  background: var(--c-card);
+  border-radius: var(--r-card);
+  padding: 32rpx;
+  margin-bottom: var(--gap);
+}
+
+.summary-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-label {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+}
+
+.summary-value {
+  font-size: 40rpx;
+  font-weight: 700;
+  margin-top: 8rpx;
+}
+
+.summary-line {
+  width: 1rpx;
+  height: 64rpx;
+  background: var(--c-line);
+}
+
+/* --- 筛选 ---------------------------------------------------------------- */
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gap);
+}
+
+.tabs {
+  display: flex;
+  background: var(--c-card);
+  border-radius: 999rpx;
+  padding: 6rpx;
+}
+
+.tab {
+  padding: 12rpx 30rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  color: var(--c-text-2);
+}
+
+.tab--on {
+  background: var(--c-primary);
+  color: #fff;
+}
+
+.year-picker {
+  font-size: 26rpx;
+  color: var(--c-text-2);
+  background: var(--c-card);
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+}
+
+/* --- 列表 ---------------------------------------------------------------- */
+
+.item-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  max-width: 300rpx;
+}
+
+.status-tag {
+  margin-left: 12rpx;
+  font-size: 20rpx;
+}
+
+.item-right {
+  align-items: flex-end;
+  margin-left: 16rpx;
+}
+
+.item-amount {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--c-primary);
+}
+
+.mini-btn {
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: var(--c-primary);
+  border: 1rpx solid var(--c-primary);
+  border-radius: 999rpx;
+  padding: 6rpx 18rpx;
+}
+
+.mini-btn:active {
+  opacity: 0.6;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96rpx 0;
+  color: var(--c-text-3);
+  font-size: 26rpx;
+}
+
+.placeholder-action {
+  margin-top: 16rpx;
+  color: var(--c-primary);
+}
+
+.more {
+  text-align: center;
+  padding: 28rpx 0;
+  font-size: 24rpx;
+  color: var(--c-text-3);
+}

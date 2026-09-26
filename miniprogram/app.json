@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/holdings/index",
+    "pages/dividends/index",
+    "pages/statistics/index",
+    "pages/profile/index",
+    "pages/holding-detail/index",
+    "pages/holding-create/index",
+    "pages/dividend-create/index",
+    "pages/calendar/index",
+    "pages/accounts/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "分红管家",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F4F5F7"
+  },
+  "tabBar": {
+    "color": "#8A8F99",
+    "selectedColor": "#0B7A5A",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "assets/tabbar/home.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/holdings/index",
+        "text": "持仓",
+        "iconPath": "assets/tabbar/holdings.png",
+        "selectedIconPath": "assets/tabbar/holdings-active.png"
+      },
+      {
+        "pagePath": "pages/dividends/index",
+        "text": "分红",
+        "iconPath": "assets/tabbar/dividends.png",
+        "selectedIconPath": "assets/tabbar/dividends-active.png"
+      },
+      {
+        "pagePath": "pages/statistics/index",
+        "text": "统计",
+        "iconPath": "assets/tabbar/statistics.png",
+        "selectedIconPath": "assets/tabbar/statistics-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "assets/tabbar/profile.png",
+        "selectedIconPath": "assets/tabbar/profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

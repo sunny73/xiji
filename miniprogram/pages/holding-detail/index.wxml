@@ -1,0 +1,113 @@
+<view class="page">
+
+  <view wx:if="{{error}}" class="error-card" bindtap="load">
+    <view class="error-title">加载失败</view>
+    <view class="error-msg">{{error}}</view>
+    <view class="error-retry">点击重试</view>
+  </view>
+
+  <block wx:if="{{holding}}">
+
+    <!-- 标的头部 -->
+    <view class="head">
+      <view class="head-name">{{holding.securityName}}</view>
+      <view class="head-meta">
+        <text class="tag tag--muted">{{holding.securityCode}}</text>
+        <text class="tag tag--muted">{{holding.marketLabel}}</text>
+        <text class="tag tag--muted">{{holding.typeLabel}}</text>
+      </view>
+      <view class="head-account">{{holding.accountName}}</view>
+    </view>
+
+    <!-- 持仓数据 -->
+    <view class="card">
+      <block wx:if="{{!editing}}">
+        <view class="stat-row">
+          <view class="stat">
+            <text class="stat-label">持有股数</text>
+            <text class="stat-value num">{{holding.sharesText}}</text>
+          </view>
+          <view class="stat">
+            <text class="stat-label">成本价</text>
+            <text class="stat-value num">{{holding.costPriceText ? holding.costPriceText : '—'}}</text>
+          </view>
+        </view>
+        <view class="cost-line">
+          <text class="muted">持仓成本</text>
+          <text class="num cost-value">{{holding.costAmountText ? '¥' + holding.costAmountText : '—'}}</text>
+        </view>
+        <view class="btn btn--ghost edit-btn" bindtap="startEdit">修改持仓</view>
+      </block>
+
+      <block wx:else>
+        <view class="form-item">
+          <text class="form-label">持有股数</text>
+          <input
+            class="form-input"
+            type="digit"
+            value="{{editShares}}"
+            bindinput="onSharesInput"
+            focus
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">成本价</text>
+          <input
+            class="form-input"
+            type="digit"
+            placeholder="留空表示不记录"
+            placeholder-class="form-placeholder"
+            value="{{editCostPrice}}"
+            bindinput="onCostInput"
+          />
+        </view>
+        <view class="edit-actions">
+          <view class="btn btn--ghost flex-1" bindtap="cancelEdit">取消</view>
+          <view class="btn btn--primary flex-1 {{submitting ? 'btn--disabled' : ''}}" bindtap="save">
+            {{submitting ? '保存中…' : '保存'}}
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 该标的的分红 -->
+    <view class="card">
+      <view class="row-between">
+        <text class="title">分红记录</text>
+        <text class="num total">{{dividendTotalText === '0.00' ? '' : '已到账 ¥' + dividendTotalText}}</text>
+      </view>
+      <text class="muted">共 {{dividendCount}} 笔</text>
+
+      <block wx:if="{{dividends.length}}">
+        <view class="divider dividend-divider"></view>
+        <view
+          wx:for="{{dividends}}"
+          wx:key="id"
+          class="dividend-row"
+          data-id="{{item.id}}"
+          bindtap="goDividend"
+        >
+          <view class="flex-1 col">
+            <text class="dividend-date">{{item.dateText}}</text>
+            <text class="muted">{{item.sharesText}} 股 × {{item.perShareText}}</text>
+          </view>
+          <view class="col dividend-right">
+            <text class="num dividend-amount">¥{{item.amountText}}</text>
+            <text class="tag {{item.statusCls}}">{{item.statusLabel}}</text>
+          </view>
+        </view>
+      </block>
+
+      <view wx:elif="{{loadingDividends}}" class="muted pad">加载中…</view>
+      <view wx:else class="muted pad">这个标的还没有分红记录</view>
+    </view>
+
+    <!-- 操作 -->
+    <view class="btn btn--primary" bindtap="addDividend">记一笔该标的分红</view>
+    <view class="btn btn--danger remove-btn" bindtap="remove">删除持仓</view>
+
+  </block>
+
+  <view wx:elif="{{loading}}" class="placeholder">加载中…</view>
+
+</view>

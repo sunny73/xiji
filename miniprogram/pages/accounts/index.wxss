@@ -1,0 +1,77 @@
+/* 投资账户 */
+
+.error-card {
+  background: var(--c-danger-soft);
+  border-radius: var(--r-card);
+  padding: 28rpx 32rpx;
+  margin-bottom: var(--gap);
+}
+.error-title { font-size: 28rpx; font-weight: 600; color: var(--c-danger); }
+.error-msg { font-size: 24rpx; color: var(--c-danger); margin-top: 8rpx; opacity: 0.85; }
+.error-retry { font-size: 24rpx; color: var(--c-danger); margin-top: 12rpx; text-decoration: underline; }
+
+.explain {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+  line-height: 1.6;
+  padding: 0 8rpx 24rpx;
+}
+
+.account-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 4rpx;
+}
+
+.chevron {
+  color: var(--c-text-3);
+  font-size: 36rpx;
+}
+
+.form-card {
+  padding: 28rpx 0 24rpx;
+}
+
+.form-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 0 32rpx 16rpx;
+}
+
+.form-picker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--c-text);
+}
+
+.arrow {
+  margin-left: 12rpx;
+  color: var(--c-text-3);
+  font-size: 32rpx;
+}
+
+.form-actions {
+  display: flex;
+  padding: 28rpx 32rpx 0;
+}
+
+.form-actions .btn {
+  margin-right: 20rpx;
+}
+
+.form-actions .btn:last-child {
+  margin-right: 0;
+}
+
+.add-btn {
+  margin: 8rpx 4rpx 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.pad {
+  padding: 48rpx 0;
+}

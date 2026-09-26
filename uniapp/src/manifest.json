@@ -1,0 +1,25 @@
+{
+  "name": "分红管家",
+  "appid": "",
+  "description": "个人投资分红现金流管理工具",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true,
+    "lazyCodeLoading": "requiredComponents"
+  },
+  "h5": {
+    "title": "分红管家",
+    "router": {
+      "mode": "hash"
+    }
+  },
+  "vueVersion": "3"
+}

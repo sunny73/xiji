@@ -1,0 +1,29 @@
+# ---------------------------------------------------------------------------
+# 开发环境的 compose 覆盖文件。
+#
+# Docker Compose 在你执行 `docker compose up` 时会**自动**读取本文件，
+# 所以本地开发不需要额外参数：
+#
+#     docker compose up -d --build
+#
+# 生产部署要显式跳过它：
+#
+#     docker compose -f docker-compose.yml up -d --build
+#
+# 只放"只在开发时成立"的东西，不要把业务配置塞进来。
+# ---------------------------------------------------------------------------
+services:
+  api:
+    # 挂源码 + 热重载：改完 Python 文件不用重新 build
+    volumes:
+      - ./backend/app:/app/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    environment:
+      # 开发默认打开调试：/docs 里能看到 SQL 回显、错误堆栈
+      ENV: dev
+      DEBUG: "true"
+      # 本地没有微信 AppID 也能登录（走 /auth/dev-login）
+      WECHAT_MOCK: "true"
+      ALLOW_DEV_LOGIN: "true"
+      # 开发用的弱密钥，生产必须换
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me-at-least-32-bytes}

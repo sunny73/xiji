@@ -1,0 +1,82 @@
+/* 我的 */
+
+.user-card {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 56rpx;
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  font-size: 44rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 28rpx;
+  flex-shrink: 0;
+}
+
+.user-info {
+  justify-content: center;
+}
+
+.user-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.nickname-input {
+  font-size: 32rpx;
+  border-bottom: 1rpx solid var(--c-line);
+  padding-bottom: 8rpx;
+  width: 100%;
+}
+
+.nickname-actions {
+  display: flex;
+  margin-top: 16rpx;
+}
+
+.mini-link {
+  font-size: 26rpx;
+  color: var(--c-text-3);
+  margin-right: 36rpx;
+}
+
+.mini-link--primary {
+  color: var(--c-primary);
+  font-weight: 500;
+}
+
+.section-head {
+  margin: 8rpx 0 16rpx;
+  padding: 0 4rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--c-text-2);
+}
+
+.chevron {
+  color: var(--c-text-3);
+  font-size: 36rpx;
+  margin-left: 12rpx;
+}
+
+.url-text {
+  max-width: 340rpx;
+}
+
+.about {
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--c-text-3);
+  padding: 40rpx 0 20rpx;
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分红管家 · H5 预览</title>
+  <!-- 由 build.js 从 miniprogram/*.wxss 转换而来（rpx→px、page→.wx-page） -->
+  <link rel="stylesheet" href="dist/app.css">
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+
+<div class="h5-stage">
+
+  <!-- 左侧说明区（只在宽屏显示） -->
+  <aside class="h5-side">
+    <h1 class="h5-logo">分红管家</h1>
+    <p class="h5-sub">H5 预览</p>
+
+    <div class="h5-note">
+      <p>这里跑的是<strong>真实的小程序代码</strong>：</p>
+      <ul>
+        <li>同一份 WXML 模板、WXSS 样式</li>
+        <li>同一份页面 JS 和 <code>services/</code> 网络层</li>
+        <li>不同之处：<code>wx.*</code> 换成了浏览器实现</li>
+      </ul>
+      <p class="h5-warn">
+        它是<strong>预览</strong>，不是能上线的 H5。原生 picker、下拉刷新、
+        分享等行为与真机有差异，最终仍需在微信开发者工具里验收。
+      </p>
+    </div>
+
+    <div class="h5-actions">
+      <button class="h5-btn" id="h5-reload">重新加载数据</button>
+      <button class="h5-btn h5-btn--ghost" id="h5-clear">清空本地登录态</button>
+    </div>
+
+    <p class="h5-api" id="h5-api"></p>
+  </aside>
+
+  <!-- 手机壳 -->
+  <div class="h5-phone">
+    <div class="h5-phone-screen">
+      <div class="h5-navbar">
+        <div class="h5-navbar-title" id="h5-nav-title"></div>
+      </div>
+      <div class="h5-body wx-page" id="h5-body"></div>
+      <div class="h5-tabbar" id="h5-tabbar"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="h5-overlay"></div>
+
+<script>
+  // 预览配置：apiBase 用相对路径 → 由 server.js 代理到后端，天然同源，不需要 CORS
+  window.__DM_PREVIEW__ = {
+    apiBase: '/api/v1',
+    devOpenid: 'dev-local-user'
+  };
+</script>
+<script src="dist/bundle.js"></script>
+<script>
+  (function () {
+    var api = document.getElementById('h5-api');
+    if (api) api.textContent = '接口 ' + window.__DM_PREVIEW__.apiBase + ' · 登录身份 ' + window.__DM_PREVIEW__.devOpenid;
+
+    document.getElementById('h5-reload').onclick = function () {
+      location.reload();
+    };
+    document.getElementById('h5-clear').onclick = function () {
+      Object.keys(localStorage)
+        .filter(function (k) { return k.indexOf('dmh5:') === 0; })
+        .forEach(function (k) { localStorage.removeItem(k); });
+      location.reload();
+    };
+  })();
+</script>
+</body>
+</html>

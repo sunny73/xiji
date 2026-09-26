@@ -1,0 +1,172 @@
+/* 统计分析 */
+
+.error-card {
+  background: var(--c-danger-soft);
+  border-radius: var(--r-card);
+  padding: 28rpx 32rpx;
+  margin-bottom: var(--gap);
+}
+.error-title { font-size: 28rpx; font-weight: 600; color: var(--c-danger); }
+.error-msg { font-size: 24rpx; color: var(--c-danger); margin-top: 8rpx; opacity: 0.85; }
+.error-retry { font-size: 24rpx; color: var(--c-danger); margin-top: 12rpx; text-decoration: underline; }
+
+/* --- 头部 ---------------------------------------------------------------- */
+
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12rpx 0 36rpx;
+}
+
+.year-chip {
+  font-size: 26rpx;
+  color: var(--c-text-2);
+  background: var(--c-card);
+  padding: 10rpx 26rpx;
+  border-radius: 999rpx;
+}
+
+.head-total {
+  font-size: 72rpx;
+  font-weight: 700;
+  letter-spacing: -1.5rpx;
+  line-height: 1.2;
+  margin-top: 20rpx;
+  color: var(--c-primary);
+}
+
+.head-sub {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+  margin-top: 6rpx;
+}
+
+.link {
+  font-size: 24rpx;
+  color: var(--c-primary);
+}
+
+/* --- 柱状图 -------------------------------------------------------------- */
+/* 纯 WXSS 手绘，不引图表库：12 根柱子用图表库要多打包 200KB 不划算 */
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  height: 280rpx;
+  margin-top: 28rpx;
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar-track {
+  width: 28rpx;
+  height: 232rpx;
+  display: flex;
+  align-items: flex-end;
+  background: #f4f5f7;
+  border-radius: 14rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  width: 100%;
+  background: #a9d6c7;
+  border-radius: 14rpx;
+  transition: height 0.2s ease;
+}
+
+.bar-fill--on {
+  background: var(--c-primary);
+}
+
+.bar-label {
+  font-size: 20rpx;
+  color: var(--c-text-3);
+  margin-top: 10rpx;
+}
+
+.bar-label--on {
+  color: var(--c-primary);
+  font-weight: 600;
+}
+
+.month-detail {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding-top: 24rpx;
+  margin-top: 8rpx;
+  border-top: 1rpx solid var(--c-line);
+}
+
+.month-detail-label {
+  font-size: 26rpx;
+  color: var(--c-text-2);
+  margin-right: 16rpx;
+}
+
+.month-detail-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--c-primary);
+  margin-right: 16rpx;
+}
+
+/* --- 列表 ---------------------------------------------------------------- */
+
+.section-head {
+  margin: 8rpx 0 16rpx;
+  padding: 0 4rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--c-text-2);
+  margin: 0;
+}
+
+.item-name {
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.item-amount {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--c-primary);
+  margin-left: 16rpx;
+}
+
+.year-cell {
+  font-size: 30rpx;
+}
+
+.year-count {
+  margin-right: 20rpx;
+}
+
+.year-amount {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.list-item--active {
+  background: var(--c-primary-soft);
+}
+
+.center {
+  text-align: center;
+}
+
+.pad {
+  padding: 48rpx 0;
+}

@@ -1,0 +1,248 @@
+/* 首页 */
+
+.error-card {
+  background: var(--c-danger-soft);
+  border-radius: var(--r-card);
+  padding: 28rpx 32rpx;
+  margin-bottom: var(--gap);
+}
+
+.error-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--c-danger);
+}
+
+.error-msg {
+  font-size: 24rpx;
+  color: var(--c-danger);
+  margin-top: 8rpx;
+  opacity: 0.85;
+}
+
+.error-retry {
+  font-size: 24rpx;
+  color: var(--c-danger);
+  margin-top: 12rpx;
+  text-decoration: underline;
+}
+
+/* --- 主卡片 -------------------------------------------------------------- */
+
+.hero {
+  background: linear-gradient(135deg, #0b7a5a 0%, #0a5f47 100%);
+  border-radius: 24rpx;
+  padding: 36rpx 36rpx 24rpx;
+  margin-bottom: var(--gap);
+  color: #fff;
+  box-shadow: 0 12rpx 36rpx rgba(11, 122, 90, 0.22);
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.hero-greet {
+  font-size: 26rpx;
+  opacity: 0.8;
+}
+
+.hero-year {
+  font-size: 24rpx;
+  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.16);
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+}
+
+.hero-label {
+  font-size: 26rpx;
+  opacity: 0.78;
+}
+
+.hero-value {
+  font-size: 76rpx;
+  font-weight: 700;
+  letter-spacing: -1.5rpx;
+  line-height: 1.15;
+  margin: 4rpx 0 8rpx;
+}
+
+.hero-split {
+  display: flex;
+  align-items: center;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.18);
+  padding-top: 24rpx;
+  margin-top: 20rpx;
+}
+
+.hero-split-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-split-label {
+  font-size: 24rpx;
+  opacity: 0.7;
+}
+
+.hero-split-value {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-top: 4rpx;
+}
+
+.hero-divider {
+  width: 1rpx;
+  height: 56rpx;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 24rpx;
+}
+
+/* --- 下一笔 -------------------------------------------------------------- */
+
+.next-card {
+  padding: 28rpx 32rpx;
+}
+
+.next-label {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+}
+
+.next-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-top: 6rpx;
+}
+
+.next-code {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+  font-weight: 400;
+}
+
+.next-amount {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--c-gold);
+}
+
+.next-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+/* --- 本月 ---------------------------------------------------------------- */
+
+.month-card {
+  padding: 24rpx 32rpx;
+}
+
+.month-amount {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-top: 4rpx;
+}
+
+.chevron {
+  color: var(--c-text-3);
+  font-size: 40rpx;
+  line-height: 1;
+}
+
+/* --- 快捷入口 ------------------------------------------------------------ */
+
+.quick {
+  display: flex;
+  background: var(--c-card);
+  border-radius: var(--r-card);
+  padding: 28rpx 0;
+  margin-bottom: var(--gap);
+}
+
+.quick-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quick-item:active {
+  opacity: 0.6;
+}
+
+.quick-icon {
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 24rpx;
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+}
+
+.quick-label {
+  font-size: 24rpx;
+  color: var(--c-text-2);
+}
+
+/* --- 最近记录 ------------------------------------------------------------ */
+
+.section-head {
+  margin: 8rpx 0 16rpx;
+  padding: 0 4rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--c-text-2);
+  margin: 0;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+}
+
+.item-name {
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.item-right {
+  align-items: flex-end;
+  margin-left: 16rpx;
+}
+
+.item-amount {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--c-primary);
+  margin-bottom: 6rpx;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 72rpx 0;
+  color: var(--c-text-3);
+  font-size: 26rpx;
+}
+
+.placeholder-action {
+  margin-top: 16rpx;
+  color: var(--c-primary);
+  font-size: 26rpx;
+}

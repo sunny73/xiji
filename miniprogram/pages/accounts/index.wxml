@@ -1,0 +1,74 @@
+<view class="page">
+
+  <view wx:if="{{error}}" class="error-card" bindtap="retry">
+    <view class="error-title">加载失败</view>
+    <view class="error-msg">{{error}}</view>
+    <view class="error-retry">点击重试</view>
+  </view>
+
+  <view class="explain">
+    一个账户对应一个券商或一类资金。持仓和分红都挂在账户下，
+    分开记账后就能看到「哪个账户收到的分红最多」。
+  </view>
+
+  <!-- 列表 -->
+  <view class="card card-tight">
+    <block wx:if="{{accounts.length}}">
+      <view
+        wx:for="{{accounts}}"
+        wx:key="id"
+        class="list-item list-item--tap"
+        data-id="{{item.id}}"
+        bindtap="onAccountTap"
+      >
+        <view class="flex-1 col">
+          <text class="account-name">{{item.name}}</text>
+          <text class="muted">{{item.typeLabel}}</text>
+        </view>
+        <text class="chevron">›</text>
+      </view>
+    </block>
+
+    <view wx:elif="{{loading}}" class="muted center pad">加载中…</view>
+
+    <view wx:else class="muted center pad">还没有账户，点下面的按钮创建一个</view>
+  </view>
+
+  <!-- 新建 / 编辑表单 -->
+  <view wx:if="{{showForm}}" class="card form-card">
+    <view class="form-title">{{formTitle}}</view>
+
+    <view class="form-item">
+      <text class="form-label">名称</text>
+      <input
+        class="form-input"
+        type="text"
+        placeholder="如 我的账户 / 老婆账户"
+        placeholder-class="form-placeholder"
+        value="{{formName}}"
+        bindinput="onNameInput"
+        focus
+      />
+    </view>
+
+    <picker mode="selector" range="{{typeOptions}}" range-key="label" value="{{formTypeIndex}}" bindchange="onTypeChange">
+      <view class="form-item">
+        <text class="form-label">类型</text>
+        <view class="form-input form-picker">
+          <text>{{typeOptions[formTypeIndex].label}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </picker>
+
+    <view class="form-actions">
+      <view class="btn btn--ghost flex-1" bindtap="closeForm">取消</view>
+      <view class="btn btn--primary flex-1 {{submitting ? 'btn--disabled' : ''}}" bindtap="submit">
+        {{submitting ? '保存中…' : '保存'}}
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="btn btn--primary add-btn" bindtap="openCreate">＋ 新建账户</view>
+
+</view>

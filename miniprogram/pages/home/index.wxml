@@ -1,0 +1,113 @@
+<!-- 首页：一眼看到「今年收了多少 / 接下来还有多少」 -->
+
+<view class="page">
+
+  <!-- 加载失败：给出可点击的重试，而不是一个空白页 -->
+  <view wx:if="{{error}}" class="error-card" bindtap="retry">
+    <view class="error-title">加载失败</view>
+    <view class="error-msg">{{error}}</view>
+    <view class="error-retry">点击重试</view>
+  </view>
+
+  <!-- 主卡片 -->
+  <view class="hero">
+    <view class="hero-top">
+      <text class="hero-greet">{{greeting}}{{userName ? '，' + userName : ''}}</text>
+      <text class="hero-year">{{year}} 年</text>
+    </view>
+    <view class="hero-label">已到账分红</view>
+    <view class="hero-value num">¥{{summary.receivedText}}</view>
+    <view class="hero-split">
+      <view class="hero-split-item">
+        <text class="hero-split-label">全年预计</text>
+        <text class="hero-split-value num">¥{{summary.estimatedText}}</text>
+      </view>
+      <view class="hero-divider"></view>
+      <view class="hero-split-item">
+        <text class="hero-split-label">待收</text>
+        <text class="hero-split-value num">¥{{summary.pendingText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近一笔 -->
+  <view wx:if="{{next}}" class="card next-card">
+    <view class="row-between">
+      <view class="col">
+        <text class="next-label">下一笔预计到账</text>
+        <text class="next-name">{{next.securityName}} <text class="next-code">{{next.securityCode}}</text></text>
+      </view>
+      <view class="next-amount num">¥{{next.amountText}}</view>
+    </view>
+    <view class="next-foot">
+      <text class="tag {{next.isSoon ? '' : 'tag--muted'}}">{{next.countdownText}}</text>
+      <text class="muted">{{next.dateText}}</text>
+    </view>
+  </view>
+
+  <!-- 本月 -->
+  <view wx:if="{{currentMonth}}" class="card month-card" bindtap="goStatistics">
+    <view class="row-between">
+      <view class="col">
+        <text class="muted">{{currentMonth.monthLabel}}已到账</text>
+        <text class="month-amount num">¥{{currentMonth.amountText}}</text>
+      </view>
+      <text class="chevron">›</text>
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick">
+    <view class="quick-item" bindtap="goCreate">
+      <view class="quick-icon">＋</view>
+      <text class="quick-label">记一笔</text>
+    </view>
+    <view class="quick-item" bindtap="goCalendar">
+      <view class="quick-icon">日</view>
+      <text class="quick-label">分红日历</text>
+    </view>
+    <view class="quick-item" bindtap="goHoldings">
+      <view class="quick-icon">仓</view>
+      <text class="quick-label">我的持仓</text>
+    </view>
+    <view class="quick-item" bindtap="goStatistics">
+      <view class="quick-icon">统</view>
+      <text class="quick-label">统计分析</text>
+    </view>
+  </view>
+
+  <!-- 最近记录 -->
+  <view class="row-between section-head">
+    <text class="section-title">最近记录</text>
+    <text class="section-more" bindtap="goDividends">全部 ›</text>
+  </view>
+
+  <view class="card card-tight">
+    <block wx:if="{{recent.length}}">
+      <view
+        wx:for="{{recent}}"
+        wx:key="id"
+        class="list-item list-item--tap"
+        data-id="{{item.id}}"
+        bindtap="goDetail"
+      >
+        <view class="flex-1 col">
+          <text class="ellipsis item-name">{{item.securityName}}</text>
+          <text class="muted">{{item.dateText}} · {{item.sharesText}} 股 × {{item.perShareText}}</text>
+        </view>
+        <view class="col item-right">
+          <text class="num item-amount">¥{{item.amountText}}</text>
+          <text class="tag {{item.statusCls}}">{{item.statusLabel}}</text>
+        </view>
+      </view>
+    </block>
+
+    <view wx:elif="{{loading}}" class="placeholder">加载中…</view>
+
+    <view wx:else class="placeholder">
+      <text>还没有分红记录</text>
+      <text class="placeholder-action" bindtap="goCreate">记第一笔 ›</text>
+    </view>
+  </view>
+
+</view>

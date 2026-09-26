@@ -1,0 +1,66 @@
+# ---------------------------------------------------------------------------
+# 分红管家 · 服务编排
+#
+# 这个文件是**生产形态**：不带源码挂载、不带 --reload，代码全部来自镜像。
+#
+#   开发：docker compose up -d --build
+#         （会自动叠加 docker-compose.override.yml，挂源码 + 热重载）
+#
+#   生产：docker compose -f docker-compose.yml up -d --build
+#         （显式指定文件，跳过 override）
+#
+# 为什么不用 Redis：当前没有任何东西需要它——没有缓存、没有队列、没有定时任务。
+# 接自动分红同步 / 提醒推送时再加，那时它才有真实用途，而不是一个空转的容器。
+#
+# 部署细节见 docs/DEPLOY.md
+# ---------------------------------------------------------------------------
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dividend}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dividend}
+      POSTGRES_DB: ${POSTGRES_DB:-dividend}
+      LANG: C.UTF-8
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # 默认**只监听 127.0.0.1**：数据库绝不该暴露到公网。
+      # 端口选 55432 而不是 5432，因为很多机器本地已经有原生 PostgreSQL 占着 5432。
+      # 容器之间走 compose 内网，不受这个映射影响。
+      # 想让局域网里的其他机器连进来（少见），设 POSTGRES_HOST_PORT=0.0.0.0:55432
+      - "${POSTGRES_HOST_PORT:-127.0.0.1:55432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dividend} -d ${POSTGRES_DB:-dividend}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENV: ${ENV:-dev}
+      DEBUG: ${DEBUG:-false}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-dividend}:${POSTGRES_PASSWORD:-dividend}@db:5432/${POSTGRES_DB:-dividend}
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me-at-least-32-bytes}
+      JWT_EXPIRE_DAYS: ${JWT_EXPIRE_DAYS:-30}
+      WECHAT_APPID: ${WECHAT_APPID:-}
+      WECHAT_SECRET: ${WECHAT_SECRET:-}
+      WECHAT_MOCK: ${WECHAT_MOCK:-false}
+      ALLOW_DEV_LOGIN: ${ALLOW_DEV_LOGIN:-false}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+    # 默认**只监听 127.0.0.1**，由同机的 Nginx 反代出去。
+    # 真机联调（手机直连电脑）时才需要放开：
+    #   API_HOST_PORT=0.0.0.0:8000 docker compose up -d
+    ports:
+      - "${API_HOST_PORT:-127.0.0.1:8000}:8000"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+
+volumes:
+  pgdata:

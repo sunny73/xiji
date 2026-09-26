@@ -1,0 +1,119 @@
+<view class="page">
+
+  <view class="card card-tight">
+    <!-- 账户 -->
+    <picker
+      mode="selector"
+      range="{{accountNames}}"
+      value="{{accountIndex}}"
+      bindchange="onAccountChange"
+      disabled="{{!accountNames.length}}"
+    >
+      <view class="form-item">
+        <text class="form-label">账户</text>
+        <view class="form-input form-picker">
+          <text>{{accountNames[accountIndex] || '暂无账户'}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </picker>
+
+    <!-- 标的代码 -->
+    <view class="form-item">
+      <text class="form-label">标的代码</text>
+      <input
+        class="form-input"
+        type="text"
+        placeholder="如 601988 / 510880"
+        placeholder-class="form-placeholder"
+        value="{{code}}"
+        bindinput="onCodeInput"
+        bindblur="onCodeBlur"
+      />
+    </view>
+
+    <!-- 查询结果 -->
+    <view wx:if="{{looking}}" class="form-item hint-row">
+      <text class="hint">查询中…</text>
+    </view>
+
+    <view wx:elif="{{security}}" class="form-item hint-row">
+      <text class="hint hint--ok">✓ {{security.name}}</text>
+      <text class="hint-sub">{{security.market}} · {{security.type}}</text>
+    </view>
+
+    <view wx:elif="{{notFound}}" class="form-item hint-row">
+      <text class="hint hint--new">新标的，请填写名称和类型</text>
+    </view>
+
+    <!-- 新标的才需要名称/市场/类型 -->
+    <block wx:if="{{notFound}}">
+      <view class="form-item">
+        <text class="form-label">标的名称</text>
+        <input
+          class="form-input"
+          type="text"
+          placeholder="如 中国银行"
+          placeholder-class="form-placeholder"
+          value="{{name}}"
+          bindinput="onNameInput"
+        />
+      </view>
+
+      <picker mode="selector" range="{{marketOptions}}" range-key="label" value="{{marketIndex}}" bindchange="onMarketChange">
+        <view class="form-item">
+          <text class="form-label">市场</text>
+          <view class="form-input form-picker">
+            <text>{{marketOptions[marketIndex].label}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </view>
+      </picker>
+
+      <picker mode="selector" range="{{typeOptions}}" range-key="label" value="{{typeIndex}}" bindchange="onTypeChange">
+        <view class="form-item">
+          <text class="form-label">类型</text>
+          <view class="form-input form-picker">
+            <text>{{typeOptions[typeIndex].label}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </view>
+      </picker>
+    </block>
+
+    <!-- 股数 / 成本 -->
+    <view class="form-item">
+      <text class="form-label">持有股数</text>
+      <input
+        class="form-input"
+        type="digit"
+        placeholder="10000"
+        placeholder-class="form-placeholder"
+        value="{{shares}}"
+        bindinput="onSharesInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">成本价</text>
+      <input
+        class="form-input"
+        type="digit"
+        placeholder="选填，如 4.12"
+        placeholder-class="form-placeholder"
+        value="{{costPrice}}"
+        bindinput="onCostInput"
+      />
+    </view>
+  </view>
+
+  <view class="tip">
+    成本价用于计算持仓成本，留空则只记股数。
+    分红金额请到「分红」页按实际到账录入。
+  </view>
+
+  <view class="btn btn--primary {{submitting ? 'btn--disabled' : ''}}" bindtap="save">
+    {{submitting ? '保存中…' : '保存'}}
+  </view>
+
+</view>

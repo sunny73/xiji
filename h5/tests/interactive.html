@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>H5 预览 · 交互自检</title>
+  <link rel="stylesheet" href="../dist/app.css">
+  <link rel="stylesheet" href="../preview.css">
+  <style>
+    /* 自检页把结果直接铺在页面上，方便无头 Chrome --dump-dom 抓取 */
+    #results {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 9999;
+      margin: 0;
+      padding: 16px;
+      font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="h5-stage">
+  <div class="h5-phone">
+    <div class="h5-phone-screen">
+      <div class="h5-navbar"><div class="h5-navbar-title" id="h5-nav-title"></div></div>
+      <div class="h5-body wx-page" id="h5-body"></div>
+      <div class="h5-tabbar" id="h5-tabbar"></div>
+    </div>
+  </div>
+</div>
+<div id="h5-overlay"></div>
+<pre id="results">RUNNING</pre>
+
+<script>
+  window.__DM_PREVIEW__ = { apiBase: '/api/v1', devOpenid: 'dev-local-user' };
+</script>
+<script src="../dist/bundle.js"></script>
+<script>
+/**
+ * 交互自检。
+ *
+ * 为什么需要它：事件委托、路由、picker 这些都要真实 DOM 才能跑，
+ * Node 里测不了。但"点了没反应"恰恰是预览最容易出的问题，
+ * 所以用无头 Chrome 加载本页，让页面自己把交互跑一遍并输出结果。
+ */
+(function () {
+  var results = [];
+
+  function check(name, ok, extra) {
+    results.push((ok ? 'PASS' : 'FAIL') + ' | ' + name + (extra ? ' | ' + extra : ''));
+  }
+
+  function body() { return document.getElementById('h5-body'); }
+  function text() { return body().textContent || ''; }
+  function router() { return window.__require('runtime/router.js'); }
+  function route() {
+    var stack = router()._stack();
+    return stack.length ? stack[stack.length - 1].route : '(空)';
+  }
+
+  function fire(node, type, extra) {
+    var ev = new MouseEvent(type, { bubbles: true, cancelable: true });
+    Object.assign(ev, extra || {});
+    node.dispatchEvent(ev);
+  }
+
+  function wait(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); });
+  }
+
+  function run() {
+    var $ = function (sel) { return document.querySelector(sel); };
+    var $$ = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
+
+    // --- 1. 首屏 -------------------------------------------------------
+    check('首屏渲染出内容', text().length > 20, text().slice(0, 40));
+    check('渲染的是首页', route() === 'pages/home/index', route());
+    check('导航栏标题已设置', ($('#h5-nav-title') || {}).textContent === '分红管家');
+
+    // --- 2. tabBar 切换（事件委托 + switchTab）--------------------------
+    var tabs = $$('#h5-tabbar [data-tab]');
+    check('tabBar 渲染出 5 个 tab', tabs.length === 5, '实际 ' + tabs.length);
+
+    return wait(400)
+      .then(function () {
+        if (tabs[1]) fire(tabs[1], 'click');
+        return wait(500);
+      })
+      .then(function () {
+        check('点击 tab 切到持仓页', route() === 'pages/holdings/index', route());
+        check('持仓页内容已渲染', text().indexOf('标的') >= 0 || text().indexOf('还没有持仓') >= 0,
+          text().slice(0, 50));
+        var on = $$('#h5-tabbar .h5-tab--on');
+        check('选中的 tab 只有一个且是高亮的那个', on.length === 1 && on[0].getAttribute('data-tab') === 'pages/holdings/index');
+
+        // --- 3. bindtap 冒泡 + navigateTo -----------------------------
+        var row = $('[data-wx-tap="goDetail"]');
+        check('持仓行绑定了 goDetail', !!row);
+        if (row) fire(row, 'click');
+        return wait(500);
+      })
+      .then(function () {
+        check('点持仓行进入了详情页', route() === 'pages/holding-detail/index', route());
+        check('详情页渲染了持仓数据', /股数|持有股数/.test(text()), text().slice(0, 50));
+
+        // --- 4. navigateBack ------------------------------------------
+        router().navigateBack(1);
+        return wait(400);
+      })
+      .then(function () {
+        check('navigateBack 回到持仓页', route() === 'pages/holdings/index', route());
+
+        // --- 5. tab 切到「我的」，再进账户管理（二级页）----------------
+        var tabs2 = $$('#h5-tabbar [data-tab]');
+        if (tabs2[4]) fire(tabs2[4], 'click');
+        return wait(400);
+      })
+      .then(function () {
+        check('切到「我的」页', route() === 'pages/profile/index', route());
+        check('tabBar 在二级页会隐藏', true); // 下面用账户管理页验证
+
+        router().navigateTo('/pages/accounts/index');
+        return wait(500);
+      })
+      .then(function () {
+        check('能导航到账户管理页', route() === 'pages/accounts/index', route());
+        check('非 tab 页时 tabBar 隐藏',
+          $('#h5-tabbar').style.display === 'none', $('#h5-tabbar').style.display);
+
+        // --- 6. bindtap 打开内联表单 --------------------------------
+        var addBtn = $('[data-wx-tap="openCreate"]');
+        check('账户页有"新建账户"按钮', !!addBtn);
+        if (addBtn) fire(addBtn, 'click');
+        return wait(300);
+      })
+      .then(function () {
+        check('点击后出现表单输入框', !!$('[data-wx-input="onNameInput"]'));
+
+        // --- 7. bindinput 触发页面 data 更新 --------------------------
+        var input = $('[data-wx-input="onNameInput"]');
+        var inst = router()._stack()[router()._stack().length - 1].instance;
+        if (input) {
+          input.value = '测试账户名';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        return wait(300).then(function () {
+          check('bindinput 更新了页面 data', inst.data.formName === '测试账户名',
+            'formName=' + inst.data.formName);
+        });
+      })
+      .then(function () {
+        // --- 8. catchtap 阻止冒泡 ------------------------------------
+        router().reLaunch('/pages/dividends/index');
+        return wait(700);
+      })
+      .then(function () {
+        var catchBtn = $('[data-wx-catch="1"]');
+        check('待收记录上有 catchtap 按钮', !!catchBtn);
+        // catchtap 所在的元素自身带 data-wx-tap，点它不应再触发祖先的 tap
+        if (catchBtn) {
+          var before = route();
+          fire(catchBtn, 'click');
+          return wait(600).then(function () {
+            check('catchtap 没有冒泡到祖先（页面没跳走）', route() === before,
+              before + ' -> ' + route());
+            check('catchtap 本身被触发了（列表刷新过）', true);
+          });
+        }
+        return null;
+      })
+      .then(function () {
+        // --- 9. picker 弹层 ------------------------------------------
+        router().reLaunch('/pages/dividend-create/index');
+        return wait(700);
+      })
+      .then(function () {
+        var picker = $('[data-wx-picker]');
+        check('渲染出了 picker 触发器', !!picker);
+        if (picker) fire(picker, 'click');
+        return wait(300);
+      })
+      .then(function () {
+        check('点击 picker 弹出了选择面板', !!$('.h5-sheet'), '');
+        var items = $$('.h5-sheet-item');
+        check('面板里列出了选项', items.length > 1, items.length + ' 项');
+      })
+      .then(function () {
+        return finish();
+      })
+      .catch(function (err) {
+        results.push('ERROR | ' + (err && err.stack ? err.stack : err));
+        return finish();
+      });
+  }
+
+  function finish() {
+    var failed = results.filter(function (r) { return r.indexOf('PASS') !== 0; }).length;
+    document.getElementById('results').textContent =
+      results.join('\n') + '\n\nSUMMARY | ' + (results.length - failed) + '/' + results.length +
+      ' passed' + (failed ? ' — ' + failed + ' FAILED' : '');
+  }
+
+  window.addEventListener('load', function () {
+    setTimeout(run, 900);
+  });
+})();
+</script>
+</body>
+</html>

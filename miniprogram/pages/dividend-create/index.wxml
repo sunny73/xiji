@@ -1,0 +1,179 @@
+<view class="page">
+
+  <!-- 金额预览：填完股数和每股分红就能看到，但最终金额以后端为准 -->
+  <view class="preview">
+    <text class="preview-label">分红金额</text>
+    <text class="preview-value num">{{amountPreview ? '¥' + amountPreview : '—'}}</text>
+    <text class="preview-hint">由「股数 × 每股分红」自动计算，保存时以后端为准</text>
+  </view>
+
+  <view class="card card-tight">
+
+    <!-- 账户：编辑模式下只读 -->
+    <block wx:if="{{mode === 'edit'}}">
+      <view class="form-item">
+        <text class="form-label">账户</text>
+        <text class="form-input form-readonly">{{lockedAccountName}}</text>
+      </view>
+      <view class="form-item">
+        <text class="form-label">标的</text>
+        <text class="form-input form-readonly">{{lockedSecurityName}}</text>
+      </view>
+    </block>
+
+    <block wx:else>
+      <picker
+        mode="selector"
+        range="{{accountNames}}"
+        value="{{accountIndex}}"
+        bindchange="onAccountChange"
+        disabled="{{!accountNames.length}}"
+      >
+        <view class="form-item">
+          <text class="form-label">账户</text>
+          <view class="form-input form-picker">
+            <text>{{accountNames[accountIndex] || '暂无账户'}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </view>
+      </picker>
+
+      <!-- 从持仓详情进来时标的已锁定，只读展示 -->
+      <view wx:if="{{presetLocked}}" class="form-item">
+        <text class="form-label">标的</text>
+        <text class="form-input form-readonly">{{security ? security.name + ' ' + security.code : '加载中…'}}</text>
+      </view>
+
+      <block wx:else>
+        <view class="form-item">
+          <text class="form-label">标的代码</text>
+          <input
+            class="form-input"
+            type="text"
+            placeholder="如 601988"
+            placeholder-class="form-placeholder"
+            value="{{code}}"
+            bindinput="onCodeInput"
+            bindblur="onCodeBlur"
+          />
+        </view>
+
+        <view wx:if="{{looking}}" class="form-item hint-row">
+          <text class="hint">查询中…</text>
+        </view>
+        <view wx:elif="{{security}}" class="form-item hint-row">
+          <text class="hint hint--ok">✓ {{security.name}}</text>
+        </view>
+        <view wx:elif="{{notFound}}" class="form-item hint-row">
+          <text class="hint hint--new">新标的，请填写名称和类型</text>
+        </view>
+
+        <block wx:if="{{notFound}}">
+          <view class="form-item">
+            <text class="form-label">标的名称</text>
+            <input
+              class="form-input"
+              type="text"
+              placeholder="如 中国银行"
+              placeholder-class="form-placeholder"
+              value="{{name}}"
+              bindinput="onNameInput"
+            />
+          </view>
+          <picker mode="selector" range="{{marketOptions}}" range-key="label" value="{{marketIndex}}" bindchange="onMarketChange">
+            <view class="form-item">
+              <text class="form-label">市场</text>
+              <view class="form-input form-picker">
+                <text>{{marketOptions[marketIndex].label}}</text>
+                <text class="arrow">›</text>
+              </view>
+            </view>
+          </picker>
+          <picker mode="selector" range="{{typeOptions}}" range-key="label" value="{{typeIndex}}" bindchange="onTypeChange">
+            <view class="form-item">
+              <text class="form-label">类型</text>
+              <view class="form-input form-picker">
+                <text>{{typeOptions[typeIndex].label}}</text>
+                <text class="arrow">›</text>
+              </view>
+            </view>
+          </picker>
+        </block>
+      </block>
+    </block>
+
+    <!-- 派息日 -->
+    <picker mode="date" value="{{paymentDate}}" start="2000-01-01" end="2100-12-31" bindchange="onDateChange">
+      <view class="form-item">
+        <text class="form-label">派息日</text>
+        <view class="form-input form-picker">
+          <text>{{paymentDate}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </picker>
+
+    <!-- 股数 -->
+    <view class="form-item">
+      <text class="form-label">分红股数</text>
+      <input
+        class="form-input"
+        type="digit"
+        placeholder="10000"
+        placeholder-class="form-placeholder"
+        value="{{shares}}"
+        bindinput="onSharesInput"
+      />
+    </view>
+
+    <!-- 每股分红 -->
+    <view class="form-item">
+      <text class="form-label">每股分红</text>
+      <input
+        class="form-input"
+        type="digit"
+        placeholder="0.19"
+        placeholder-class="form-placeholder"
+        value="{{perShare}}"
+        bindinput="onPerShareInput"
+      />
+    </view>
+
+    <!-- 状态 -->
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+      <view class="form-item">
+        <text class="form-label">状态</text>
+        <view class="form-input form-picker">
+          <text>{{statusOptions[statusIndex].label}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </picker>
+
+    <!-- 备注 -->
+    <view class="form-item">
+      <text class="form-label">备注</text>
+      <input
+        class="form-input"
+        type="text"
+        placeholder="选填"
+        placeholder-class="form-placeholder"
+        value="{{note}}"
+        bindinput="onNoteInput"
+      />
+    </view>
+
+  </view>
+
+  <view class="tip">
+    「待收」表示已公告但还没到账；到账后改成「已到账」。
+    同一标的可以先记待收，钱到了再确认，这样首页的预计收入与实际收入能对上。
+  </view>
+
+  <view class="btn btn--primary {{submitting ? 'btn--disabled' : ''}}" bindtap="save">
+    {{submitting ? '保存中…' : (mode === 'edit' ? '保存修改' : '保存')}}
+  </view>
+
+  <view wx:if="{{mode === 'edit'}}" class="btn btn--danger remove-btn" bindtap="remove">删除这笔记录</view>
+
+</view>

@@ -1,0 +1,81 @@
+/* 记一笔分红 */
+
+.preview {
+  background: linear-gradient(135deg, #0b7a5a 0%, #0a5f47 100%);
+  border-radius: 24rpx;
+  padding: 36rpx;
+  margin-bottom: var(--gap);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preview-label {
+  font-size: 26rpx;
+  opacity: 0.78;
+}
+
+.preview-value {
+  font-size: 68rpx;
+  font-weight: 700;
+  letter-spacing: -1rpx;
+  line-height: 1.2;
+  margin: 8rpx 0;
+}
+
+.preview-hint {
+  font-size: 22rpx;
+  opacity: 0.65;
+  text-align: center;
+}
+
+.form-picker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--c-text);
+}
+
+.form-readonly {
+  color: var(--c-text-3);
+}
+
+.arrow {
+  margin-left: 12rpx;
+  color: var(--c-text-3);
+  font-size: 32rpx;
+}
+
+.hint-row {
+  justify-content: flex-start;
+  min-height: 72rpx;
+}
+
+.hint {
+  font-size: 26rpx;
+  color: var(--c-text-3);
+}
+
+.hint--ok {
+  color: var(--c-primary);
+}
+
+.hint--new {
+  color: var(--c-gold);
+}
+
+.tip {
+  font-size: 24rpx;
+  color: var(--c-text-3);
+  line-height: 1.6;
+  padding: 0 12rpx 32rpx;
+}
+
+.btn {
+  margin: 0 4rpx;
+}
+
+.remove-btn {
+  margin-top: 24rpx;
+}

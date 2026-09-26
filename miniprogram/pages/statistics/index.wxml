@@ -1,0 +1,94 @@
+<view class="page">
+
+  <view wx:if="{{error}}" class="error-card" bindtap="retry">
+    <view class="error-title">加载失败</view>
+    <view class="error-msg">{{error}}</view>
+    <view class="error-retry">点击重试</view>
+  </view>
+
+  <!-- 年份 + 总计 -->
+  <view class="head">
+    <picker mode="selector" range="{{years}}" value="{{yearIndex}}" bindchange="onYearChange">
+      <view class="year-chip">{{year}} 年 ›</view>
+    </picker>
+    <view class="head-total num">¥{{totalText}}</view>
+    <view class="head-sub">全年到账 · 共 {{count}} 笔</view>
+  </view>
+
+  <!-- 月度柱状图 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="title">月度分布</text>
+      <text class="link" bindtap="goCalendar">日历视图 ›</text>
+    </view>
+
+    <view class="chart">
+      <view
+        wx:for="{{monthBars}}"
+        wx:key="month"
+        class="bar-col"
+        data-index="{{index}}"
+        bindtap="onBarTap"
+      >
+        <view class="bar-track">
+          <view
+            class="bar-fill {{selectedMonthIndex === index ? 'bar-fill--on' : ''}}"
+            style="height: {{item.heightPercent}}%"
+          ></view>
+        </view>
+        <text class="bar-label {{selectedMonthIndex === index ? 'bar-label--on' : ''}}">{{item.month}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{selectedMonth}}" class="month-detail">
+      <text class="month-detail-label">{{selectedMonth.monthLabel}}</text>
+      <text class="month-detail-value num">¥{{selectedMonth.amountText}}</text>
+      <text class="muted">{{selectedMonth.count}} 笔</text>
+    </view>
+    <view wx:else class="month-detail">
+      <text class="muted">{{year}} 年还没有分红记录</text>
+    </view>
+  </view>
+
+  <!-- 按标的 -->
+  <view class="row-between section-head">
+    <text class="section-title">按标的</text>
+    <text class="link" bindtap="goDividends">全部记录 ›</text>
+  </view>
+
+  <view class="card card-tight">
+    <block wx:if="{{bySecurity.length}}">
+      <view
+        wx:for="{{bySecurity}}"
+        wx:key="securityId"
+        class="list-item"
+      >
+        <view class="flex-1 col">
+          <text class="item-name ellipsis">{{item.securityName}}</text>
+          <text class="muted">{{item.securityCode}} · {{item.count}} 笔</text>
+        </view>
+        <text class="num item-amount">¥{{item.amountText}}</text>
+      </view>
+    </block>
+    <view wx:elif="{{loading}}" class="muted center pad">加载中…</view>
+    <view wx:else class="muted center pad">这一年还没有数据</view>
+  </view>
+
+  <!-- 历年对比 -->
+  <view wx:if="{{yearly.length > 1}}" class="section-head">
+    <text class="section-title">历年对比</text>
+  </view>
+
+  <view wx:if="{{yearly.length > 1}}" class="card card-tight">
+    <view
+      wx:for="{{yearly}}"
+      wx:key="year"
+      class="list-item {{item.isCurrent ? 'list-item--active' : ''}}"
+    >
+      <text class="flex-1 year-cell">{{item.year}} 年</text>
+      <text class="muted year-count">{{item.count}} 笔</text>
+      <text class="num year-amount">¥{{item.amountText}}</text>
+    </view>
+  </view>
+
+</view>

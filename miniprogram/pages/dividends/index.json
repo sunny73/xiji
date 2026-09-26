@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "分红记录",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#F4F5F7",
+  "onReachBottomDistance": 80
+}

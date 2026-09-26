@@ -1,0 +1,90 @@
+/* 持仓列表 */
+
+.error-card {
+  background: var(--c-danger-soft);
+  border-radius: var(--r-card);
+  padding: 28rpx 32rpx;
+  margin-bottom: var(--gap);
+}
+.error-title { font-size: 28rpx; font-weight: 600; color: var(--c-danger); }
+.error-msg { font-size: 24rpx; color: var(--c-danger); margin-top: 8rpx; opacity: 0.85; }
+.error-retry { font-size: 24rpx; color: var(--c-danger); margin-top: 12rpx; text-decoration: underline; }
+
+/* --- 筛选 ---------------------------------------------------------------- */
+
+.filter-bar {
+  white-space: nowrap;
+  margin-bottom: var(--gap);
+}
+
+.chip {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 16rpx;
+  border-radius: 999rpx;
+  background: var(--c-card);
+  color: var(--c-text-2);
+  font-size: 26rpx;
+}
+
+.chip--on {
+  background: var(--c-primary);
+  color: #fff;
+}
+
+/* --- 汇总 ---------------------------------------------------------------- */
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8rpx 20rpx;
+}
+
+.summary-count {
+  font-size: 26rpx;
+  color: var(--c-text-2);
+}
+
+.summary-cost {
+  font-size: 26rpx;
+  color: var(--c-text-3);
+}
+
+/* --- 列表 ---------------------------------------------------------------- */
+
+.item-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  max-width: 380rpx;
+}
+
+.code-tag {
+  margin-left: 12rpx;
+  font-size: 20rpx;
+}
+
+.item-right {
+  align-items: flex-end;
+  margin-left: 16rpx;
+}
+
+.item-cost {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 4rpx;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96rpx 0;
+  color: var(--c-text-3);
+  font-size: 26rpx;
+}
+
+.placeholder-action {
+  margin-top: 16rpx;
+  color: var(--c-primary);
+}

@@ -1,0 +1,4 @@
+{
+  "//": "只给 Node 看：让 src 下的 .js 按 ESM 解析，这样测试脚本能直接 import 这些模块。根 package.json 故意不设 type:module（uni CLI 用 CommonJS），所以在 src 里单独声明一次。Vite 本来就按 ESM 处理，不受影响。",
+  "type": "module"
+}

@@ -1,0 +1,61 @@
+<view class="page">
+
+  <view wx:if="{{error}}" class="error-card" bindtap="retry">
+    <view class="error-title">加载失败</view>
+    <view class="error-msg">{{error}}</view>
+    <view class="error-retry">点击重试</view>
+  </view>
+
+  <!-- 账户筛选 -->
+  <scroll-view wx:if="{{filters.length > 1}}" class="filter-bar" scroll-x enable-flex>
+    <view
+      wx:for="{{filters}}"
+      wx:key="id"
+      class="chip {{filterIndex === index ? 'chip--on' : ''}}"
+      data-index="{{index}}"
+      bindtap="onFilterChange"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <!-- 汇总 -->
+  <view wx:if="{{count > 0}}" class="summary">
+    <text class="summary-count">{{count}} 个标的</text>
+    <text class="summary-cost">合计成本 ¥{{totalCostText}}</text>
+  </view>
+
+  <view class="card card-tight">
+    <block wx:if="{{holdings.length}}">
+      <view
+        wx:for="{{holdings}}"
+        wx:key="id"
+        class="list-item list-item--tap"
+        data-id="{{item.id}}"
+        bindtap="goDetail"
+      >
+        <view class="flex-1 col">
+          <view class="row">
+            <text class="item-name ellipsis">{{item.securityName}}</text>
+            <text class="tag tag--muted code-tag">{{item.securityCode}}</text>
+          </view>
+          <text class="muted">{{item.accountName}} · {{item.sharesText}} 股</text>
+        </view>
+        <view class="col item-right">
+          <text class="num item-cost">{{item.costAmountText ? '¥' + item.costAmountText : '—'}}</text>
+          <text class="muted">成本{{item.costPriceText ? ' ¥' + item.costPriceText : '未填'}}</text>
+        </view>
+      </view>
+    </block>
+
+    <view wx:elif="{{loading}}" class="placeholder">加载中…</view>
+
+    <view wx:else class="placeholder">
+      <text>{{hasAccounts ? '还没有持仓' : '还没有账户'}}</text>
+      <text class="placeholder-action" bindtap="goCreate">
+        {{hasAccounts ? '添加第一笔持仓 ›' : '先去创建账户 ›'}}
+      </text>
+    </view>
+  </view>
+
+</view>
+
+<view class="fab" bindtap="goCreate">＋</view>

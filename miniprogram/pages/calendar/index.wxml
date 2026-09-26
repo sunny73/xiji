@@ -1,0 +1,75 @@
+<view class="page">
+
+  <view wx:if="{{error}}" class="error-card" bindtap="retry">
+    <view class="error-title">加载失败</view>
+    <view class="error-msg">{{error}}</view>
+    <view class="error-retry">点击重试</view>
+  </view>
+
+  <!-- 月份切换 -->
+  <view class="month-bar">
+    <view class="month-nav" bindtap="prevMonth">‹</view>
+    <view class="month-title" bindtap="goToday">
+      <text>{{monthLabel}}</text>
+      <text class="month-today">回到本月</text>
+    </view>
+    <view class="month-nav" bindtap="nextMonth">›</view>
+  </view>
+
+  <!-- 日历 -->
+  <view class="calendar">
+    <view class="week-row">
+      <view wx:for="{{weekLabels}}" wx:key="*this" class="week-cell">{{item}}</view>
+    </view>
+
+    <view wx:for="{{rows}}" wx:for-item="row" wx:key="key" class="day-row">
+      <view
+        wx:for="{{row.cells}}"
+        wx:for-item="cell"
+        wx:key="iso"
+        class="day-cell {{cell.inMonth ? '' : 'day-cell--out'}} {{cell.isToday ? 'day-cell--today' : ''}} {{cell.isSelected ? 'day-cell--on' : ''}}"
+        data-iso="{{cell.iso}}"
+        bindtap="onDayTap"
+      >
+        <text class="day-num">{{cell.day}}</text>
+        <text wx:if="{{cell.hasDividend}}" class="day-amount">{{cell.amountText}}</text>
+        <text wx:else class="day-dot-space"></text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="muted center">加载中…</view>
+
+  <!-- 选中日详情 -->
+  <block wx:if="{{selectedDate}}">
+    <view class="row-between section-head">
+      <text class="section-title">{{selectedDateText}}</text>
+      <text class="num section-total">{{selectedItems.length ? '¥' + selectedTotalText : ''}}</text>
+    </view>
+
+    <view class="card card-tight">
+      <block wx:if="{{selectedItems.length}}">
+        <view
+          wx:for="{{selectedItems}}"
+          wx:key="id"
+          class="list-item list-item--tap"
+          data-id="{{item.id}}"
+          bindtap="goDividend"
+        >
+          <view class="flex-1 col">
+            <text class="item-name ellipsis">{{item.securityName}}</text>
+            <text class="muted">{{item.sharesText}} 股 × {{item.perShareText}} · {{item.accountName}}</text>
+          </view>
+          <view class="col item-right">
+            <text class="num item-amount">¥{{item.amountText}}</text>
+            <text class="tag {{item.statusCls}}">{{item.statusLabel}}</text>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="muted center pad">这天没有分红记录</view>
+    </view>
+  </block>
+
+  <view wx:else class="hint-tap">点击日期查看当天的分红</view>
+
+</view>
