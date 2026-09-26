@@ -28,9 +28,14 @@ devBase = '/api/v1'
 
 // #ifdef MP-WEIXIN
 // 小程序没有代理这回事，request 域名只能是完整地址。
+//
 // 模拟器：127.0.0.1 就是本机（配合开发者工具的「不校验合法域名」）
-// 真机联调：换成电脑的局域网 IP，例如 http://192.168.1.8:8000/api/v1
-devBase = 'http://127.0.0.1:8000/api/v1'
+// 真机：  手机上的 127.0.0.1 是手机自己，必须换成电脑的局域网 IP。
+//         不把 IP 写死在这里 —— 它是每台机器、每个网络都不一样的值，
+//         写死既会进 git，换 WiFi 又会静默失效。
+//         用 uniapp/.env.local（已 gitignore）覆盖：
+//             VITE_DEV_API_BASE=http://192.168.0.112:8000/api/v1
+devBase = import.meta.env.VITE_DEV_API_BASE || 'http://127.0.0.1:8000/api/v1'
 // #endif
 
 const config = {

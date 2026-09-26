@@ -232,12 +232,40 @@ if (fs.existsSync(path.join(ROOT, MP_DIST))) {
   check('★ 小程序产物的接口地址是开发期可达的（不是占位域名）', () => {
     // 曾经踩过：#ifdef H5 在 MP-WEIXIN 构建时被裁掉，devBase 保持成了
     // https://api.example.com —— 模拟器一打开就"连不上后端"，而且不报编译错。
+    //
+    // 注意不能只搜"文件里有没有 api.example.com"：PROD_BASE 常量本来就在产物里
+    // （它是 devBase 的初始值），那样会误报。必须把 baseUrl 真的**求值**出来。
     const appJs = read(MP_DIST + '/utils/config.js')
-    const m = /baseUrl:\s*"([^"]+)"/.exec(appJs)
+
+    const m = /baseUrl:\s*([^,}]+)/.exec(appJs)
     if (!m) throw new Error('产物里找不到 baseUrl')
-    const url = m[1]
+
+    let expr = m[1].trim()
+
+    // 压缩后 baseUrl 可能只是个变量名，回头找它最后一次赋值
+    if (/^[A-Za-z_$][\w$]*$/.test(expr)) {
+      const name = expr
+      const re = new RegExp(name + '\\s*=\\s*([^;]+);', 'g')
+      let last = null
+      let hit
+      while ((hit = re.exec(appJs))) last = hit[1]
+      if (!last) throw new Error('找不到变量 ' + name + ' 的赋值')
+      expr = last.trim()
+    }
+
+    // 形如  a || b || c  ：取第一个能确定的字面量
+    let url = null
+    for (const part of expr.split('||').map((s) => s.trim())) {
+      const q = /^"([^"]*)"$/.exec(part) || /^'([^']*)'$/.exec(part)
+      if (q) {
+        url = q[1]
+        break
+      }
+    }
+    if (!url) throw new Error('无法从表达式求值出地址：' + expr)
+
     if (url.includes('api.example.com')) {
-      throw new Error('还是占位域名 ' + url + '，小程序会连不上后端')
+      throw new Error('求值结果是占位域名 ' + url + '，小程序会连不上后端')
     }
     if (!/^https?:\/\//.test(url)) {
       throw new Error('小程序端必须是完整地址（不能是相对路径）：' + url)
