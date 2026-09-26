@@ -30,12 +30,21 @@ devBase = '/api/v1'
 // 小程序没有代理这回事，request 域名只能是完整地址。
 //
 // 模拟器：127.0.0.1 就是本机（配合开发者工具的「不校验合法域名」）
-// 真机：  手机上的 127.0.0.1 是手机自己，必须换成电脑的局域网 IP。
-//         不把 IP 写死在这里 —— 它是每台机器、每个网络都不一样的值，
-//         写死既会进 git，换 WiFi 又会静默失效。
-//         用 uniapp/.env.local（已 gitignore）覆盖：
-//             VITE_DEV_API_BASE=http://192.168.0.112:8000/api/v1
-devBase = import.meta.env.VITE_DEV_API_BASE || 'http://127.0.0.1:8000/api/v1'
+// 真机：  手机上的 127.0.0.1 是手机自己，必须换成外网可达的地址。
+//         不把地址写死在这里 —— 它每台机器、每个网络都不一样，
+//         写死既会进 git，换了网络又会静默失效。
+//         在 uniapp/.env.local（已 gitignore）里配：
+//             VITE_DEV_API_BASE=https://xxx.trycloudflare.com/api/v1
+//
+// __DEV_API_BASE__ 由 vite.config.js 的 define 在构建期替换成字面量。
+// 纯 Node（单元测试）下这个标识符不存在，所以必须用 typeof 判断 ——
+// 直接引用未声明的标识符会 ReferenceError，typeof 不会。
+// ⚠️ 这里不能用 import.meta.env：条件编译块在 Node 里照样执行，
+//    而 Node 里 import.meta.env 是 undefined，一访问就抛。
+devBase =
+  typeof __DEV_API_BASE__ === 'string' && __DEV_API_BASE__
+    ? __DEV_API_BASE__
+    : 'http://127.0.0.1:8000/api/v1'
 // #endif
 
 const config = {
