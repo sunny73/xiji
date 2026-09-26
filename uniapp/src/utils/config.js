@@ -14,14 +14,23 @@ const ENV = 'dev'
 /** ⚠️ 上线前改成你自己的域名（必须 HTTPS 且已 ICP 备案） */
 const PROD_BASE = 'https://api.example.com/api/v1'
 
-// 开发环境的地址：H5 用相对路径走代理，其他平台只能写完整地址。
+// 开发环境的地址：各平台规则不一样，用条件编译分开写。
 //
 // ⚠️ 条件编译是**构建期**做代码裁剪，在纯 Node（比如单元测试）里
 // `// #ifdef` 只是普通注释，块内的赋值照样会执行 ——
 // 所以 Node 里 devBase 会是 '/api/v1'。写测试时要知道这一点。
 let devBase = PROD_BASE
+
 // #ifdef H5
+// H5 跑在浏览器里，用相对路径走 vite 代理（同源，不用动后端 CORS）
 devBase = '/api/v1'
+// #endif
+
+// #ifdef MP-WEIXIN
+// 小程序没有代理这回事，request 域名只能是完整地址。
+// 模拟器：127.0.0.1 就是本机（配合开发者工具的「不校验合法域名」）
+// 真机联调：换成电脑的局域网 IP，例如 http://192.168.1.8:8000/api/v1
+devBase = 'http://127.0.0.1:8000/api/v1'
 // #endif
 
 const config = {

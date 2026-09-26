@@ -229,6 +229,22 @@ if (fs.existsSync(path.join(ROOT, MP_DIST))) {
     return 'OK'
   })
 
+  check('★ 小程序产物的接口地址是开发期可达的（不是占位域名）', () => {
+    // 曾经踩过：#ifdef H5 在 MP-WEIXIN 构建时被裁掉，devBase 保持成了
+    // https://api.example.com —— 模拟器一打开就"连不上后端"，而且不报编译错。
+    const appJs = read(MP_DIST + '/utils/config.js')
+    const m = /baseUrl:\s*"([^"]+)"/.exec(appJs)
+    if (!m) throw new Error('产物里找不到 baseUrl')
+    const url = m[1]
+    if (url.includes('api.example.com')) {
+      throw new Error('还是占位域名 ' + url + '，小程序会连不上后端')
+    }
+    if (!/^https?:\/\//.test(url)) {
+      throw new Error('小程序端必须是完整地址（不能是相对路径）：' + url)
+    }
+    return url
+  })
+
   check('小程序产物：不含 vite / vue 的开发期代码', () => {
     const appJs = read(MP_DIST + '/common/vendor.js')
     if (appJs.includes('sourceMappingURL=data:')) throw new Error('产物里有内联 sourcemap')

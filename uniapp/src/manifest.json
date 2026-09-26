@@ -6,7 +6,7 @@
   "versionCode": "100",
   "transformPx": false,
   "mp-weixin": {
-    "appid": "",
+    "appid": "wx14c81af89c7290a2",
     "setting": {
       "urlCheck": false,
       "es6": true,
@@ -21,5 +21,8 @@
       "mode": "hash"
     }
   },
-  "vueVersion": "3"
+  "vueVersion": "3",
+  "uniStatistics": {
+    "enable": false
+  }
 }
